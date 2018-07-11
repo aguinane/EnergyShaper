@@ -5,18 +5,18 @@
 """
 
 import logging
-from collections import namedtuple
 from math import ceil
 from statistics import mean
 from typing import Tuple, Iterable, List
-import datetime
+from datetime import datetime, timedelta
 import calendar
+from . import Reading
 
 
-def split_into_profiled_intervals(records: Iterable[Tuple[datetime.datetime, datetime.datetime, float]],
+def split_into_profiled_intervals(records: Iterable[Reading],
                                   interval_m: int = 30,
-                                  profile: List[float] = [0.05,  0.07,  0.12,  0.11,
-                                                          0.14,  0.14,  0.27, 0.10
+                                  profile: List[float] = [0.05, 0.07, 0.12, 0.11,
+                                                          0.14, 0.14, 0.27, 0.10
                                                           ]
                                   ):
     """ Split load data into daily billing intervals if larger
@@ -38,7 +38,7 @@ def split_into_profiled_intervals(records: Iterable[Tuple[datetime.datetime, dat
         rec_interval = int((end_date - start_date).total_seconds() / 60)
         if rec_interval <= interval_m:
             # Already less then interval so return as is
-            yield (start_date, end_date, usage)
+            yield Reading(start_date, end_date, usage)
         elif rec_interval > 24 * 60:
             raise ValueError(
                 'Records must be split into daily (or smaller) intervals first')
@@ -48,7 +48,7 @@ def split_into_profiled_intervals(records: Iterable[Tuple[datetime.datetime, dat
                 start_date, end_date, interval_m))
             for i, (period_start, period_end) in enumerate(intervals):
                 split_usage = scaled_profile[i] * usage
-                yield (period_start, period_end, split_usage)
+                yield Reading(period_start, period_end, split_usage)
 
         else:
             # Smaller than a day, just split evenly
@@ -58,9 +58,8 @@ def split_into_profiled_intervals(records: Iterable[Tuple[datetime.datetime, dat
             # The last interval could potentially have a smaller duration
             split_usage = usage / len(intervals)
             for period_start, period_end in intervals:
-                yield (period_start, period_end, split_usage)
+                yield Reading(period_start, period_end, split_usage)
 
-        # yield (period_start, period_end, daily_usage)
 
 
 def transform_load_shape(profile: List[float],
@@ -92,7 +91,7 @@ def transform_load_shape(profile: List[float],
     return new_profile
 
 
-def split_into_daily_intervals(records: Iterable[Tuple[datetime.datetime, datetime.datetime, float]]):
+def split_into_daily_intervals(records: Iterable[Reading]):
     """ Split load data into daily billing intervals if larger
 
     :param records: Tuple in the form of (start_date, end_date, usage)
@@ -107,7 +106,7 @@ def split_into_daily_intervals(records: Iterable[Tuple[datetime.datetime, dateti
 
         if interval_days <= 1.0:
             # Don't need to do anything
-            yield (start_date, end_date, usage)
+            yield Reading(start_date, end_date, usage)
         else:
             intervals = list(split_into_intervals(
                 start_date, end_date, interval_m=60 * 24))
@@ -115,12 +114,12 @@ def split_into_daily_intervals(records: Iterable[Tuple[datetime.datetime, dateti
             # The last interval could potentially have a smaller duration
             daily_usage = usage / len(intervals)
             for period_start, period_end in intervals:
-                yield (period_start, period_end, daily_usage)
+                yield Reading(period_start, period_end, daily_usage)
 
 
-def split_into_intervals(start_date: datetime.datetime, end_date: datetime.datetime,
+def split_into_intervals(start_date: datetime, end_date: datetime,
                          interval_m: float = 30
-                         ) -> Iterable[Tuple[datetime.datetime, datetime.datetime]]:
+                         ) -> Iterable[Tuple[datetime, datetime]]:
     """ Generate equally spaced intervals between two dates
 
     :param start_date: The starting date range
@@ -128,7 +127,7 @@ def split_into_intervals(start_date: datetime.datetime, end_date: datetime.datet
     :param interval_m: The interval between ranges in minutes
     :return: Start and end type for each interval generated
     """
-    delta = datetime.timedelta(seconds=interval_m * 60)
+    delta = timedelta(seconds=interval_m * 60)
     period_start = start_date
     period_end = start_date + delta
     if period_end >= end_date:

@@ -4,6 +4,8 @@
     Given energy readings, split and group into given energy load shapes/profiles
 """
 
+from energy_shaper.models import Reading, DaySummary
+
 from energy_shaper.splitter import split_into_intervals
 from energy_shaper.splitter import split_into_daily_intervals
 from energy_shaper.splitter import split_into_profiled_intervals

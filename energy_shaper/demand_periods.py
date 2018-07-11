@@ -5,15 +5,15 @@
 """
 
 import logging
-import datetime
+from datetime import datetime, time
 from typing import List
 
 
-def in_peak_period(billing_time: datetime.datetime,
+def in_peak_period(billing_time: datetime,
                    peak_months: List[int] = [12, 1, 2],
                    peak_days: List[int] = [0, 1, 2, 3, 4, 5, 6],
-                   peak_start: datetime.time = datetime.time(15, 0, 0),
-                   peak_end: datetime.time = datetime.time(21, 30, 0),
+                   peak_start: time = time(15, 0, 0),
+                   peak_end: time = time(21, 30, 0),
                    ) -> bool:
     """ Calculate if billing period falls on a peak day
         :param billing_time: The datetime to check (period ending)
@@ -30,7 +30,7 @@ def in_peak_period(billing_time: datetime.datetime,
     return False
 
 
-def in_peak_day(billing_time: datetime.datetime,
+def in_peak_day(billing_time: datetime,
                 peak_months: List[int] = [12, 1, 2],
                 peak_days: List[int]= [0, 1, 2, 3, 4, 5, 6]
                 ) -> bool:
@@ -48,9 +48,9 @@ def in_peak_day(billing_time: datetime.datetime,
     return False
 
 
-def in_peak_time(billing_time: datetime.datetime,
-                 peak_start: datetime.time = datetime.time(15, 0, 0),
-                 peak_end: datetime.time = datetime.time(21, 30, 0)
+def in_peak_time(billing_time: datetime,
+                 peak_start: time = time(15, 0, 0),
+                 peak_end: time = time(21, 30, 0)
                  ) -> bool:
     """ Calculate if billing period falls in peak time period
         :param billing_time: The datetime to check (period ending)
