@@ -15,7 +15,9 @@ import calendar
 
 def split_into_profiled_intervals(records: Iterable[Tuple[datetime.datetime, datetime.datetime, float]],
                                   interval_m: int = 30,
-                                  profile: List[float] = [0.2, 0.2, 0.4, 0.2]
+                                  profile: List[float] = [0.05,  0.07,  0.12,  0.11,
+                                                          0.14,  0.14,  0.27, 0.10
+                                                          ]
                                   ):
     """ Split load data into daily billing intervals if larger
 

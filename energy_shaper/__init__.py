@@ -10,3 +10,7 @@ from energy_shaper.splitter import split_into_profiled_intervals
 
 from energy_shaper.demand_periods import in_peak_day, in_peak_time
 from energy_shaper.demand_periods import in_peak_period
+
+from energy_shaper.grouper import get_group_end
+from energy_shaper.grouper import group_into_profiled_intervals
+from energy_shaper.grouper import group_into_daily_summary

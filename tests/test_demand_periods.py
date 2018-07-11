@@ -16,16 +16,16 @@ from energy_shaper import in_peak_period
 def test_peak_day():
     """ Test the day period matching is returned correctly """
 
-    peak_months = [12,1,2]  # Summer
+    peak_months = [12, 1, 2]  # Summer
     peak_days = [1, 2, 3, 4, 5]  # Weekdays
 
-    billing_time = datetime.datetime(2018, 1, 1, 0, 0, 0) # Mon
+    billing_time = datetime.datetime(2018, 1, 1, 0, 0, 0)  # Mon
     assert in_peak_day(billing_time, peak_months, peak_days)
 
-    billing_time = datetime.datetime(2018, 1, 6, 0, 0, 0) # Sat
+    billing_time = datetime.datetime(2018, 1, 6, 0, 0, 0)  # Sat
     assert not in_peak_day(billing_time, peak_months, peak_days)
 
-    billing_time = datetime.datetime(2018, 7, 1, 0, 0, 0) # Winter
+    billing_time = datetime.datetime(2018, 7, 1, 0, 0, 0)  # Winter
     assert not in_peak_day(billing_time, peak_months, peak_days)
 
 
@@ -56,23 +56,23 @@ def test_peak_time():
 def test_peak_period():
     """ Test the time period matching is returned correctly """
 
-    peak_months = [12,1,2]  # Summer
+    peak_months = [12, 1, 2]  # Summer
     peak_days = [1, 2, 3, 4, 5]  # Weekdays
     peak_start = datetime.time(15, 0, 0)
     peak_end = datetime.time(21, 30, 0)
 
-    billing_time = datetime.datetime(2018, 1, 1, 16, 30, 0) # Mon
+    billing_time = datetime.datetime(2018, 1, 1, 16, 30, 0)  # Mon
     assert in_peak_period(billing_time, peak_months, peak_days,
-                              peak_start, peak_end)
+                          peak_start, peak_end)
 
-    billing_time = datetime.datetime(2018, 1, 1, 23, 30, 0) # Mon Late
+    billing_time = datetime.datetime(2018, 1, 1, 23, 30, 0)  # Mon Late
     assert not in_peak_period(billing_time, peak_months, peak_days,
                               peak_start, peak_end)
 
-    billing_time = datetime.datetime(2018, 1, 6, 16, 30, 0) # Sat
+    billing_time = datetime.datetime(2018, 1, 6, 16, 30, 0)  # Sat
     assert not in_peak_period(billing_time, peak_months, peak_days,
                               peak_start, peak_end)
 
-    billing_time = datetime.datetime(2018, 1, 6, 23, 30, 0) # Sat Late
+    billing_time = datetime.datetime(2018, 1, 6, 23, 30, 0)  # Sat Late
     assert not in_peak_period(billing_time, peak_months, peak_days,
                               peak_start, peak_end)

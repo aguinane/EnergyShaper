@@ -31,8 +31,9 @@ def in_peak_period(billing_time: datetime.datetime,
 
 
 def in_peak_day(billing_time: datetime.datetime,
-                peak_months: List[int],
-                peak_days: List[int]) -> bool:
+                peak_months: List[int] = [12, 1, 2],
+                peak_days: List[int]= [0, 1, 2, 3, 4, 5, 6]
+                ) -> bool:
     """ Calculate if billing period falls on a peak day
         :param billing_time: The datetime to check (period ending)
         :param peak_months: List of months that peak applies
@@ -48,7 +49,9 @@ def in_peak_day(billing_time: datetime.datetime,
 
 
 def in_peak_time(billing_time: datetime.datetime,
-                 peak_start: datetime.time, peak_end: datetime.time) -> bool:
+                 peak_start: datetime.time = datetime.time(15, 0, 0),
+                 peak_end: datetime.time = datetime.time(21, 30, 0)
+                 ) -> bool:
     """ Calculate if billing period falls in peak time period
         :param billing_time: The datetime to check (period ending)
         :param peak_start: The time period the peak starts at
