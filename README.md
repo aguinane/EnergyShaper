@@ -2,7 +2,7 @@
 
 Split and group energy billing data to analyse usage and apply load profiles
 
-[![Build Status](https://travis-ci.org/aguinane/EnergyShaper.svg?branch=master)](https://travis-ci.org/aguinane/EnergyShaper) [![Coverage Status](https://coveralls.io/repos/github/aguinane/EnergyShaper/badge.svg)](https://coveralls.io/github/aguinane/EnergyShaper)
+[![Build Status](https://travis-ci.org/aguinane/EnergyShaper.svg?branch=master)](https://travis-ci.org/aguinane/EnergyShaper) [![Coverage Status](https://coveralls.io/repos/github/aguinane/EnergyShaper/badge.svg)](https://coveralls.io/github/aguinane/EnergyShaper) [![PyPI version](https://badge.fury.io/py/energy-shaper.svg)](https://badge.fury.io/py/energy-shaper)
 
 ## Split into intervals based on load profile
 
