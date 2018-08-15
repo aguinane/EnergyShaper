@@ -7,6 +7,7 @@ import logging
 from datetime import datetime, time, timedelta
 from typing import Tuple, Iterable, List
 from math import isclose
+from . import PROFILE_DEFAULT, ALL_MONTHS, ALL_DAYS
 from . import split_into_daily_intervals
 from . import split_into_profiled_intervals
 from . import in_peak_period
@@ -14,15 +15,13 @@ from . import Reading, DaySummary
 
 
 def group_into_daily_summary(records: List[Reading],
-                             profile: List[float] = [0.05,  0.07,  0.12,  0.11,
-                                                     0.14,  0.14,  0.27, 0.10
-                                                     ],
-                             peak_months: List[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                             profile: List[float] = PROFILE_DEFAULT,
+                             peak_months: List[int] = ALL_MONTHS,
                              peak_days: List[int] = [0, 1, 2, 3, 4],
                              peak_start: time = time(16, 0, 0),
                              peak_end: time = time(20, 0, 0),
-                             shoulder_months: List[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-                             shoulder_days: List[int] = [0, 1, 2, 3, 4, 5, 6],
+                             shoulder_months: List[int] = ALL_MONTHS,
+                             shoulder_days: List[int] = ALL_DAYS,
                              shoulder_start: time = time(7, 0, 0),
                              shoulder_end: time = time(22, 0, 0),
                              ):
@@ -100,9 +99,7 @@ def group_into_daily_summary(records: List[Reading],
 
 def group_into_profiled_intervals(records: Iterable[Reading],
                                   interval_m: int = 30,
-                                  profile: List[float] = [0.05,  0.07,  0.12,  0.11,
-                                                          0.14,  0.14,  0.27, 0.10
-                                                          ]
+                                  profile: List[float] = PROFILE_DEFAULT
                                   ):
     """ Group load data into billing intervals, if larger split first
 
@@ -130,7 +127,7 @@ def group_into_profiled_intervals(records: Iterable[Reading],
         assert rec_interval <= interval_m
 
         # Increment dictionary value
-        group_end = get_group_end(end_date)
+        group_end = get_group_end(end_date, interval_m)
         if group_end not in group_records:
             group_records[group_end] = usage
         else:

@@ -10,14 +10,13 @@ from statistics import mean
 from typing import Tuple, Iterable, List
 from datetime import datetime, timedelta
 import calendar
+from . import PROFILE_DEFAULT
 from . import Reading
 
 
 def split_into_profiled_intervals(records: Iterable[Reading],
                                   interval_m: int = 30,
-                                  profile: List[float] = [0.05, 0.07, 0.12, 0.11,
-                                                          0.14, 0.14, 0.27, 0.10
-                                                          ]
+                                  profile: List[float] = PROFILE_DEFAULT
                                   ):
     """ Split load data into daily billing intervals if larger
 
