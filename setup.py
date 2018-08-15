@@ -19,7 +19,7 @@ except FileNotFoundError:
 setup(
     name='energy_shaper',
     packages=['energy_shaper'],
-    version='0.1',
+    version='0.1.1',
     description='Split and group energy billing data to analyse usage and aplpy load profiles',
     long_description=long_description,
     long_description_content_type='text/markdown',

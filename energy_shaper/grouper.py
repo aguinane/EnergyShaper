@@ -127,7 +127,7 @@ def group_into_profiled_intervals(records: Iterable[Reading],
         assert rec_interval <= interval_m
 
         # Increment dictionary value
-        group_end = get_group_end(end_date)
+        group_end = get_group_end(end_date, interval_m)
         if group_end not in group_records:
             group_records[group_end] = usage
         else:
