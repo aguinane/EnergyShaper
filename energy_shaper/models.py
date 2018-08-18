@@ -5,17 +5,20 @@
 """
 
 from datetime import datetime
-from typing import NamedTuple
+from typing import NamedTuple, Optional
+
 
 class Reading(NamedTuple):
     """ Represents an daily summary """
     start: datetime
     end: datetime
     usage: float
+    quality: Optional[str]
 
     def __repr__(self) -> str:
         values = f'start={self.start}, end={self.end}, usage {self.usage:.2f}'
         return f'<Reading {values}>'
+
 
 class DaySummary(NamedTuple):
     """ Represents an daily summary """

@@ -34,10 +34,14 @@ def split_into_profiled_intervals(records: Iterable[Reading],
         start_date = record[0]
         end_date = record[1]
         usage = record[2]
+        try:
+            quality = record[3]
+        except IndexError:
+            quality = None        
         rec_interval = int((end_date - start_date).total_seconds() / 60)
         if rec_interval <= interval_m:
             # Already less then interval so return as is
-            yield Reading(start_date, end_date, usage)
+            yield Reading(start_date, end_date, usage, quality)
         elif rec_interval > 24 * 60:
             raise ValueError(
                 'Records must be split into daily (or smaller) intervals first')
@@ -47,7 +51,7 @@ def split_into_profiled_intervals(records: Iterable[Reading],
                 start_date, end_date, interval_m))
             for i, (period_start, period_end) in enumerate(intervals):
                 split_usage = scaled_profile[i] * usage
-                yield Reading(period_start, period_end, split_usage)
+                yield Reading(period_start, period_end, split_usage, None)
 
         else:
             # Smaller than a day, just split evenly
@@ -57,7 +61,7 @@ def split_into_profiled_intervals(records: Iterable[Reading],
             # The last interval could potentially have a smaller duration
             split_usage = usage / len(intervals)
             for period_start, period_end in intervals:
-                yield Reading(period_start, period_end, split_usage)
+                yield Reading(period_start, period_end, split_usage, None)
 
 
 
@@ -100,12 +104,16 @@ def split_into_daily_intervals(records: Iterable[Reading]):
         start_date = record[0]
         end_date = record[1]
         usage = record[2]
+        try:
+            quality = record[3]
+        except IndexError:
+            quality = None
         interval_s = int((end_date - start_date).total_seconds())
         interval_days = interval_s / 60 / 60 / 24
 
         if interval_days <= 1.0:
             # Don't need to do anything
-            yield Reading(start_date, end_date, usage)
+            yield Reading(start_date, end_date, usage, quality)
         else:
             for read in split_reading_into_days(start_date, end_date, usage):
                 yield read
@@ -118,7 +126,7 @@ def split_reading_into_days(start, end, usage):
     next_day = start.replace(hour=0, minute=0, second=0) + timedelta(days=1)
     fd_secs =  (next_day - start).total_seconds()
     fd_usage = usage * (fd_secs / total_secs)
-    yield Reading(start, next_day, fd_usage)
+    yield Reading(start, next_day, fd_usage, None)
 
     # Generate the rest of the days    
     period_start = next_day
@@ -130,7 +138,7 @@ def split_reading_into_days(start, end, usage):
             period_end = end 
         period_secs = (period_end - period_start).total_seconds()
         period_usage = fd_usage = usage * (period_secs / total_secs)
-        yield Reading(period_start, period_end, period_usage)
+        yield Reading(period_start, period_end, period_usage, None)
         period_start += timedelta(days=1)
         period_end += timedelta(days=1)
     

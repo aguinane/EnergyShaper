@@ -44,8 +44,7 @@ def group_into_daily_summary(records: List[Reading],
     for record in records:
         start_date = record[0]
         end_date = record[1]
-        usage = record[2]
-
+        usage = record[2] 
         # Increment Daily Totals
         group_day = start_date.strftime('%Y-%m-%d')
         if group_day not in group_total:
@@ -120,8 +119,7 @@ def group_into_profiled_intervals(records: Iterable[Reading],
     for record in records:
         start_date = record[0]
         end_date = record[1]
-        usage = record[2]
-
+        usage = record[2] 
         # Check interval
         rec_interval = int((end_date - start_date).total_seconds()/60)
         assert rec_interval <= interval_m
@@ -137,7 +135,7 @@ def group_into_profiled_intervals(records: Iterable[Reading],
     for key in sorted(group_records.keys()):
         end = key
         start = end - timedelta(minutes=interval_m)
-        yield Reading(start, end, group_records[key])
+        yield Reading(start, end, group_records[key], None)
 
 
 def get_group_end(end_date: datetime, interval_m: int = 30
