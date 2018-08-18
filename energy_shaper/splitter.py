@@ -107,14 +107,33 @@ def split_into_daily_intervals(records: Iterable[Reading]):
             # Don't need to do anything
             yield Reading(start_date, end_date, usage)
         else:
-            intervals = list(split_into_intervals(
-                start_date, end_date, interval_m=60 * 24))
-            # Split evenly by number of intervals returned
-            # The last interval could potentially have a smaller duration
-            daily_usage = usage / len(intervals)
-            for period_start, period_end in intervals:
-                yield Reading(period_start, period_end, daily_usage)
+            for read in split_reading_into_days(start_date, end_date, usage):
+                yield read
 
+
+def split_reading_into_days(start, end, usage):
+    """ Split a single reading into even daily readings """
+    total_secs = (end - start).total_seconds()
+    # Split first day into single day
+    next_day = start.replace(hour=0, minute=0, second=0) + timedelta(days=1)
+    fd_secs =  (next_day - start).total_seconds()
+    fd_usage = usage * (fd_secs / total_secs)
+    yield Reading(start, next_day, fd_usage)
+
+    # Generate the rest of the days    
+    period_start = next_day
+    period_end = period_start + timedelta(days=1)
+    if period_end >= end:
+        period_end = end
+    while period_start < end:
+        if period_end > end:
+            period_end = end 
+        period_secs = (period_end - period_start).total_seconds()
+        period_usage = fd_usage = usage * (period_secs / total_secs)
+        yield Reading(period_start, period_end, period_usage)
+        period_start += timedelta(days=1)
+        period_end += timedelta(days=1)
+    
 
 def split_into_intervals(start_date: datetime, end_date: datetime,
                          interval_m: float = 30
